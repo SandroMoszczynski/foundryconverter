@@ -121,7 +121,7 @@ class LevelImageobject(BaseModel):
 
 
 class LevelsObject(BaseModel):
-    _id: str
+    id: str = Field(alias="_id")
     name: str
     background: LevelImageobject = Field(default=LevelImageobject())
     textures: LevelTextureObject = Field(default=LevelTextureObject())
@@ -239,5 +239,5 @@ class FoundryWithLevelsFormat(BaseModel):
     walls: list[WallsObject] | list = Field(default=list())
     navOrder: float = Field(default=0)
     navName: str = Field(default="")
-    _stats: StatsObject = Field(default=StatsObject())
+    stats: StatsObject = Field(default=StatsObject(), alias="_stats")
     initialLevel: str | None = Field(default=None)

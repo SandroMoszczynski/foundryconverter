@@ -4,18 +4,19 @@ from foundryconverter.export_formats.types import (
     BaseConverterClass,
     BaseConverterConfig,
 )
-from pydantic import BaseModel
+
+from pydantic import BaseModel, Field
 from typing import Any
 
 
-class FloorObject(BaseModel):
-    json_location: str
-    start_height: int
-    end_height: str
+class ExtraConfig(BaseModel):
+    lightanimation: str | None = None
+    # TODO add more here
 
 
 class ConfigData(BaseConverterConfig):
-    floor_objects: list[FloorObject]
+    extra_config: ExtraConfig | None = None
+    final_file_format: str = Field(default="json")
 
 
 class ConvertDD2ToFoundry(BaseConverterClass):
