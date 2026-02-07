@@ -1,0 +1,23 @@
+[build-system]
+requires = ["uv_build>=0.9.30,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.setuptools]
+py-modules = []
+
+[project]
+name = "foundryconverter"
+version = "0.0.1"
+description = "Converts formats to importable foundry files"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies  = [
+  "pydantic",
+  "PySide6",
+  "typer",
+]
+
+[project.scripts]
+foundryconvert = "foundryconverter.convert:convert_app"
+foundrysetup = "foundryconverter.setup_level:setup_level_app"
