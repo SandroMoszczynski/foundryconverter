@@ -43,10 +43,6 @@ class ConvertDD2ToFoundry(BaseConverterClass):
                 self.convert_from_json(self.read_from_file(floor.json_location))
             )
 
-    @staticmethod
-    def configure_config_data(data) -> ConfigData:
-        return ConfigData(**data)
-
     def setup_objects(self) -> FoundryWithLevelsFormat:
         levels: list[LevelsObject] = []
         lights: list[LightObject] = []
