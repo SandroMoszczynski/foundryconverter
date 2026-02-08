@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import json
 from typing import Any
 from pydantic import BaseModel
+import os
 
 
 class FloorObject(BaseModel):
@@ -21,7 +22,9 @@ class BaseConverterConfig(BaseModel):
     floor_objects: list[FloorObject]
 
     def return_final_name(self):
-        return f"{self.final_location}{self.file_name}.{self.final_file_format}"
+        return os.path.join(
+            self.final_location, f"{self.file_name}.{self.final_file_format}"
+        )
 
 
 class SetupVariables(BaseModel):

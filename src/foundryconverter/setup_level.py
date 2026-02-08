@@ -1,6 +1,7 @@
 import typer
 from pathlib import Path
-from PySide6.QtGui import QIntValidator
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QIntValidator, QRegularExpressionValidator
 from PySide6.QtWidgets import (
     QGridLayout,
     QPushButton,
@@ -51,6 +52,11 @@ class MainWindow(QWidget):
         self.wall_height.setValidator(QIntValidator())
         height_label = QLabel("Enter wall height:", self)
 
+        # naming
+        self.final_name = QLineEdit()
+        self.final_name.setValidator(QRegularExpressionValidator())
+        final_name_label = QLabel("Name of the project:", self)
+
         # file selection
         file_browser_btn = QPushButton("Browse")
         file_browser_btn.clicked.connect(self.open_file_dialog)
@@ -60,26 +66,31 @@ class MainWindow(QWidget):
         self.import_choice, import_label = self.create_import_choice()
         self.export_choice, export_label = self.create_export_choice()
 
-        # layout setup
+        # left column
         layout.addWidget(QLabel("Files:"), 0, 0)
-        layout.addWidget(self.file_list, 1, 0, 1, 2)
-        layout.addWidget(file_browser_btn, 2, 0, 1, 2)
-        layout.addWidget(start_label, 3, 0)
-        layout.addWidget(height_label, 3, 1)
-        layout.addWidget(self.start_height, 4, 0)
-        layout.addWidget(self.wall_height, 4, 1)
-        layout.addWidget(import_label, 5, 0)
-        layout.addWidget(export_label, 5, 1)
-        layout.addWidget(self.import_choice, 6, 0)
-        layout.addWidget(self.export_choice, 6, 1)
-        layout.addWidget(save_button, 7, 0, 1, 2)
-        layout.addWidget(convert_button, 8, 0, 1, 2)
+        layout.addWidget(self.file_list, 1, 0, 9, 1)
+        layout.addWidget(file_browser_btn, 9, 0, alignment=Qt.AlignmentFlag.AlignBottom)
+
+        # right column
+        layout.addWidget(final_name_label, 0, 1)
+        layout.addWidget(self.final_name, 1, 1)
+        layout.addWidget(start_label, 2, 1)
+        layout.addWidget(self.start_height, 3, 1)
+        layout.addWidget(height_label, 4, 1)
+        layout.addWidget(self.wall_height, 5, 1)
+        layout.addWidget(import_label, 6, 1)
+        layout.addWidget(self.import_choice, 7, 1)
+        layout.addWidget(export_label, 8, 1)
+        layout.addWidget(self.export_choice, 9, 1)
+
+        # bottom
+        layout.addWidget(save_button, 10, 0, 1, 2)
+        layout.addWidget(convert_button, 11, 0, 1, 2)
 
         self.show()
 
     def create_import_choice(self):
         list_widget = QListWidget(self)
-        list_widget.setGeometry(50, 70, 150, 60)
         current_choices = [{"label": "foundry", "value": "foundry"}]
         for choice in current_choices:
             list_widget.addItem(QListWidgetItem(choice["label"]))
@@ -88,7 +99,6 @@ class MainWindow(QWidget):
 
     def create_export_choice(self):
         list_widget = QListWidget(self)
-        list_widget.setGeometry(50, 70, 150, 60)
         current_choices = [
             {"label": "dungeon_alchemist", "value": "json"},
             {"label": "dd2vtt", "value": "dd2vtt"},
@@ -101,8 +111,9 @@ class MainWindow(QWidget):
     def save(self):
         start_height = int(self.start_height.text())
         wall_height = int(self.wall_height.text())
-        import_choice = self.import_choice.takeItem(0).text()
-        export_choice = self.export_choice.takeItem(0).text()
+        project_name = self.final_name.text()
+        import_choice = self.import_choice.selectedItems().pop(0).text()
+        export_choice = self.export_choice.selectedItems().pop(0).text()
         floors = []
         for i in range(self.file_list.count()):
             floor = FloorObject(
@@ -114,12 +125,12 @@ class MainWindow(QWidget):
 
         converter = conversion_factory(import_choice, export_choice)
         self.config_object = converter.config_class(
-            file_name="test.json",
+            file_name=f"{project_name}-combined",
             final_location=os.getcwd(),
             floors=self.file_list.count(),
             initial_level=0,
             wall_height=wall_height,
-            map_name="test combined maps",
+            map_name=project_name,
             floor_objects=floors,
         )
         variables = SetupVariables(
@@ -128,11 +139,11 @@ class MainWindow(QWidget):
             final_location=os.getcwd(),
             config_dict=self.config_object,
         )
-        with open(self.setup_file, "w") as final_write:
+        with open(os.path.join(os.getcwd(), self.setup_file), "w") as final_write:
             json.dump(variables.model_dump(), final_write)
 
     def convert(self):
-        convert(self.setup_file)
+        convert(os.path.join(os.getcwd(), self.setup_file))
 
     def open_file_dialog(self):
         dialog = QFileDialog(self)
