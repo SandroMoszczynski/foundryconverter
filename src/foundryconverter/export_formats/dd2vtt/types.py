@@ -1,9 +1,16 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, BeforeValidator
+from typing import Annotated
+
+
+def discard_negative(value: float | int):
+    if value < 0:
+        return 0
+    return value
 
 
 class PositionOjbect(BaseModel):
-    x: float
-    y: float
+    x: Annotated[float | int, BeforeValidator(discard_negative)]
+    y: Annotated[float | int, BeforeValidator(discard_negative)]
 
 
 class ResolutionObject(BaseModel):
@@ -15,20 +22,20 @@ class ResolutionObject(BaseModel):
 class PortalObject(BaseModel):
     position: PositionOjbect
     bounds: list[PositionOjbect]
-    rotation: int
+    rotation: float
     closed: bool
     freestanding: bool
 
 
 class EnvironmentObject(BaseModel):
-    baked_light: bool
+    baked_lighting: bool
     ambient_light: str
 
 
 class LightObject(BaseModel):
     position: PositionOjbect
-    range: int
-    intensity: int
+    range: float
+    intensity: float
     color: str
     shadows: bool = Field(default=True)
 

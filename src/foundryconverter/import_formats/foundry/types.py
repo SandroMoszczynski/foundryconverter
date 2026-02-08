@@ -67,7 +67,7 @@ class LightConfigObject(BaseModel):
     alpha: float
     angle: int = Field(default=360)
     bright: float
-    color: str
+    color: str = Field(default="#FFAD00")
     coloration: float = Field(default=1)
     dim: float
     attenuation: float = Field(default=1)
@@ -171,7 +171,7 @@ class GlobalLightObject(BaseModel):
     enabled: bool = Field(default=True)
     alpha: float = Field(default=0.5)
     bright: bool = Field(default=False)
-    color: None = Field(default=None)
+    color: str | None = Field(default=None)
     coloration: float = Field(default=1)
     luminosity: float = Field(default=0)
     saturation: float = Field(default=0)
@@ -207,8 +207,8 @@ class GridObject(BaseModel):
     style: str = Field(default="solidLines")
     thickness: float = Field(default=1)
     color: str = Field(default="#000000")
-    alpha: float
-    distance: float = Field(default=5)
+    alpha: float = Field(default=1)
+    distance: float = Field(default=0.2)
     units: str = Field(default="ft")
 
 
