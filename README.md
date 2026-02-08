@@ -9,6 +9,5 @@ This then gives you two commands:
 Alternatively you can run both of them manually with uv or python, although you wil have to manage your directories a little more (and setup venvs etc).
 
 # TODO:
-- finalise the dd2vtt converter
 - give more advanced options somewhere in another tab
 - look into adding images to the files, current need to add them manually in foundry
