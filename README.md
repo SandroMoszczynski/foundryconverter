@@ -1,6 +1,6 @@
 # Installation 
 
-Can run this in a few ways, reccomended way would be to install it through pipx then run `pipx install .` when in the parent directory (the one with `pyproject.toml`). Note: if you are running an updated version, you will need to use `--force` to overwite the old scripts.
+Can run this in a few ways, reccomended way would be to install it through pipx then run `pipx install .` when in the parent directory (the one with `pyproject.toml`). Note: if you are running an updated version, you will need to use `--force` to overwite the old scripts. Although a simple installation with `pip install .` does also work (but is quite a bit slower).
 
 This then gives you two commands:
 1. `foundrysetup` -> This opens a gui to setup some basic config to a json file. Note once this file is created you can manually edit it to add more levels or change the spacing on the levels, or even add more if you need. There is a convert button here also that lets you just run the second command through here.
